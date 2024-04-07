@@ -25,5 +25,25 @@ func main() {
 		os.Exit(1)
 	}
 	out := "HTTP/1.1 200 OK\r\n\r\n"
+
+	in := make([]byte, 4096)
+	content, err := connection.Read(in)
+	if err != nil {
+		fmt.Println("error accepting connection")
+		os.Exit(1)
+	}
+
+	// nc -v 127.0.0.1 4221
+	// opens the channel to send anything (string) from your terminal to
+	// this golang server!
+	/**
+	1. start this golang server
+	2. run nc -v 127.0.0.1 4221
+	3. type anything in your nc terminal
+	4. golang will receive it!
+	*/
+	fmt.Println(string(in))
+	fmt.Println(content)
+
 	connection.Write([]byte(out))
 }
