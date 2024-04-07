@@ -34,15 +34,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// nc -v 127.0.0.1 4221
-	// opens the channel to send anything (string) from your terminal to
-	// this golang server!
-	/**
-	1. start this golang server
-	2. run nc -v 127.0.0.1 4221
-	3. type anything in your nc terminal
-	4. golang will receive it!
-	*/
 	inputString := string(in)
 	rows := strings.Split(inputString, "\r\n")
 
@@ -61,6 +52,22 @@ func main() {
 
 	if route == "/" {
 		out := "HTTP/1.1 200 OK\r\n\r\n"
+		connection.Write([]byte(out))
+		return
+	}
+
+	if strings.Contains(route, "/echo/") {
+		body := strings.Replace(route, "/echo/", "", 1)
+
+		// HTTP status line
+		out := "HTTP/1.1 200 OK\r\n\r\n"
+		// headers
+		out += "Content-Type: text/plain\r\n"
+		out += fmt.Sprintf("Content-Length: %d\r\n", len(body))
+		out += "\r\n" // end of headers
+		// body
+		out += body
+
 		connection.Write([]byte(out))
 		return
 	}
