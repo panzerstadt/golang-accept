@@ -67,6 +67,7 @@ func main() {
 		out += "\r\n" // end of headers
 		// body
 		out += body
+		out += "\r\n"
 
 		connection.Write([]byte(out))
 		return
