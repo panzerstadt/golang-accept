@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	// Uncomment this block to pass the first stage
 	"net"
 	"os"
@@ -24,10 +26,9 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-	out := "HTTP/1.1 200 OK\r\n\r\n"
 
 	in := make([]byte, 4096)
-	content, err := connection.Read(in)
+	_, err = connection.Read(in)
 	if err != nil {
 		fmt.Println("error accepting connection")
 		os.Exit(1)
@@ -42,8 +43,28 @@ func main() {
 	3. type anything in your nc terminal
 	4. golang will receive it!
 	*/
-	fmt.Println(string(in))
-	fmt.Println(content)
+	inputString := string(in)
+	rows := strings.Split(inputString, "\r\n")
 
+	// for idx, row := range rows {
+
+	// 	fmt.Println("row number " + fmt.Sprint(idx))
+	// 	fmt.Println(row)
+	// }
+
+	f := strings.Split(rows[0], " ")
+	verb := f[0]
+	route := f[1]
+	httpVersion := f[2]
+
+	fmt.Println(verb, route, httpVersion)
+
+	if route == "/" {
+		out := "HTTP/1.1 200 OK\r\n\r\n"
+		connection.Write([]byte(out))
+		return
+	}
+
+	out := "HTTP/1.1 404 Not Found\r\n\r\n"
 	connection.Write([]byte(out))
 }
