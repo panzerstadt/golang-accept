@@ -64,7 +64,7 @@ func main() {
 		out := "HTTP/1.1 200 OK\r\n"
 		// headers
 		out += "Content-Type: text/plain\r\n"
-		out += fmt.Sprintf("Content-Length: %d\r\n", len(body)+2)
+		out += fmt.Sprintf("Content-Length: %d\r\n", len(body))
 		out += "\r\n" // end of headers
 		// body
 		out += body
