@@ -53,6 +53,7 @@ func main() {
 	if route == "/" {
 		out := "HTTP/1.1 200 OK\r\n\r\n"
 		connection.Write([]byte(out))
+		connection.Close()
 		return
 	}
 
@@ -60,19 +61,21 @@ func main() {
 		body := strings.Replace(route, "/echo/", "", 1)
 
 		// HTTP status line
-		out := "HTTP/1.1 200 OK\r\n\r\n"
+		out := "HTTP/1.1 200 OK\r\n"
 		// headers
 		out += "Content-Type: text/plain\r\n"
-		out += fmt.Sprintf("Content-Length: %d\r\n", len(body))
+		out += fmt.Sprintf("Content-Length: %d\r\n", len(body)+2)
 		out += "\r\n" // end of headers
 		// body
 		out += body
 		out += "\r\n"
 
 		connection.Write([]byte(out))
+		connection.Close()
 		return
 	}
 
 	out := "HTTP/1.1 404 Not Found\r\n\r\n"
 	connection.Write([]byte(out))
+	connection.Close()
 }
